@@ -1,17 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <dirent.h>
 #include <string.h>
+#include "filing.h"
 
-int filePass(char *filePath){
+int main(){
+    char path[100] = "/home/notaspecificname/Pictures/Screenshots/";
+    scanDirectoryAndLoadFiles(path);
+}
 
-    FILE *fptr;
-    fptr = fopen(filePath, "r");
+void scanDirectoryAndLoadFiles(char folderPath[100]){
 
-    if(fptr == NULL){
-        return -1;
+    int fileCount = 0;
+    char fullPath[290];
+
+    DIR *dir = opendir(folderPath);     //Like FILE variable type we have set a pointer dir to folderPath
+    
+    if(dir == NULL){
+        return;      //Folder doesnot exist
     }
-    else{
-        fclose(fptr);
-        return 1;
+    
+    struct dirent *entry;       //Built in structure which holds information about the next file in the folder
+    while((entry = readdir(dir))!= NULL){
+        
+        //Skips the "." and ".." directory names
+        if(strcmp(entry -> d_name, ".") == 0 || strcmp(entry -> d_name, "..") == 0){
+            continue;
+        }
+        
+        sprintf(fullPath,290,"%s/%s",folderPath,entry->d_name); //Appends the file name to directory path to create file path
+        
+        FILE *fptr = fopen(fullPath,"rb");
+        
+
+
+        
+                                       
     }
+
+    
+    
+
+
+
 }
