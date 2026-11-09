@@ -2,7 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-void filePass(char *filePath){
+int filePass(char *filePath){
 
-    //Comment
+    FILE *fptr;
+    fptr = fopen(filePath, "r");
+
+    if(fptr == NULL){
+        return -1;
+    }
+    else{
+        fclose(fptr);
+        return 1;
+    }
 }
