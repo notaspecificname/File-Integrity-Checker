@@ -44,7 +44,7 @@ void scanDirectoryAndLoadFiles(char folderPath[100]){
             size_t bytesRead = fread(fileContent, 1, sizeof(fileContent) -1, fptr);    //Copies binary data directly to fileContent. No need for complex string functions
             fileContent[bytesRead] =  '\0';
 
-            //Pass fileContent to hashing function. hashing function will return a 32 character hash value.
+            //Pass fileContent and number of bytes to hashing function. hashing function will return a 32 character hash value.
             //hash = hash_func()
             //strncpy(baseline[fileCount].hash ,hash ,sizeof(baseline[fileCount].hash) -1);   //Store the hash into the struct
 
