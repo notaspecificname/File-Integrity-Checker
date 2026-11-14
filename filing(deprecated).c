@@ -6,7 +6,7 @@
 
 typedef struct{
     char fileName[128];
-    char hash[33];
+    char hash[9];
 } fileRecord;
 
 int main(){
@@ -19,7 +19,7 @@ void scanDirectoryAndLoadFiles(char folderPath[100]){
     int fileCount = 0;
     char fullPath[290];
     char fileContent[9000];
-    char hash[33];  //Will store intermediate hash value
+    char hash[9];  //Will store intermediate hash value
 
     fileRecord baseline[100];
 
