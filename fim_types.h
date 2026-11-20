@@ -1,8 +1,9 @@
-#ifndef FIM_TYPES_H 
+#ifndef FIM_TYPES_H
 #define FIM_TYPES_H
+
 #include <stdint.h>
 
-#define MAX_PATH_LEN 512 //max charachter allowed for path input
+#define MAX_PATH_LEN 512
 #define HASH_LEN 17          // 16 hex chars for 64-bit FNV-1a + null terminator
 #define MAX_FILES 1024
 
@@ -23,5 +24,13 @@ typedef struct {
     FileStatus status;
     char timestamp[32];
 } FileRecord;
+
+typedef struct {
+    char target_dir[MAX_PATH_LEN];
+    char baseline_file[MAX_PATH_LEN];
+    char report_file[MAX_PATH_LEN];
+    int scan_interval_sec;
+    int is_running;
+} CliState;
 
 #endif
