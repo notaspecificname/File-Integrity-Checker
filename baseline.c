@@ -1,28 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
 
-#define MAX_PATH_LEN 512
-#define HASH_LEN 17      // 16 hex chars for 64-bit FNV-1a + null terminator
-#define MAX_FILES 1024
-// 64-bit FNV-1a Standard Constants
-#define FNV_OFFSET_BASIS 14695981039346656037ULL
-#define FNV_PRIME        1099511628211ULL
-typedef enum {
-    STATUS_UNCHANGED,
-    STATUS_MODIFIED,
-    STATUS_DELETED,
-    STATUS_NEW
-} FileStatus;
-
-typedef struct {
-    char filepath[MAX_PATH_LEN];
-    char hash[HASH_LEN];
-    FileStatus status;
-    char timestamp[32];
-} FileRecord;
-
+#include "fim_types.h"
 
 int save_baseline(const char *baseline_path, const FileRecord *records,int count){
 
@@ -45,7 +25,7 @@ int save_baseline(const char *baseline_path, const FileRecord *records,int count
 
 int load_baseline(const char *baseline_path, FileRecord *records, int *count){
 
-    int loadedCount = 0;        //Stores the number of records successfully loaded in struct
+    *count = 0;
     char line[1024];
     FILE *fptr;
     fptr = fopen(baseline_path,"r");
@@ -83,11 +63,12 @@ int load_baseline(const char *baseline_path, FileRecord *records, int *count){
 int compare_with_baseline(const FileRecord *baseline, int base_count, FileRecord *current, int curr_count, FileRecord *report, int *report_count){
     
     *report_count = 0;      //Ensures it starts from 0 regardless of parameter
+
     //Checks current files against base files and assigns modified if changes in hash found
-    for(int x = 0; x < curr_count; x++){        //Iterates through every record in base struct
+    for(int x = 0; x < curr_count && *report_count < MAX_FILES; x++){        //Iterates through every record in current struct
         FileStatus status = STATUS_NEW;
 
-        for(int y = 0; y < base_count; y++){        //Iterates through every record in current struct
+        for(int y = 0; y < base_count; y++){        //Iterates through every record in base struct
             if(strcmp(current[x].filepath, baseline[y].filepath) == 0){
                 if(strcmp(current[x].hash, baseline[y].hash) == 0){
                     status = STATUS_UNCHANGED;
@@ -103,8 +84,9 @@ int compare_with_baseline(const FileRecord *baseline, int base_count, FileRecord
         report[*report_count].status = status;
         (*report_count)++;      //Passes back updated number of records
     }
+
     //Checks for deleted files in current record and adds them to report
-    for(int x = 0; x < base_count; x++){
+    for(int x = 0; x < base_count && *report_count < MAX_FILES; x++){
         int found = 0;
 
         for(int y = 0; y < curr_count; y++){
@@ -133,7 +115,7 @@ int export_report(const char *report_path, const FileRecord *report, int report_
         return -1;
     }
 
-    for(int x = 0; x < report_count+1; x++){
+    for(int x = 0; x < report_count; x++){
 
         char *status_string = "placeholder";
 
@@ -156,7 +138,7 @@ int export_report(const char *report_path, const FileRecord *report, int report_
         }
 
 
-        fprintf(fptr, "STATUS: %s PATH: %s HASH: %s TIME: %s", status_string, report[x].filepath, report[x].hash, report[x].timestamp);
+        fprintf(fptr, "STATUS: %s PATH: %s HASH: %s TIME: %s\n", status_string, report[x].filepath, report[x].hash, report[x].timestamp);
     }
 
     fclose(fptr);
