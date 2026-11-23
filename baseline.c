@@ -135,6 +135,10 @@ int export_report(const char *report_path, const FileRecord *report, int report_
             case STATUS_DELETED:
                 status_string = "DELETED";
                 break;
+            
+            default:
+                status_string = "unknown";
+                break;
         }
 
 
