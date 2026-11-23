@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "fim_types.h"
 
 int save_baseline(const char *baseline_path, const FileRecord *records,int count){
