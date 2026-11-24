@@ -11,10 +11,10 @@ void run_periodic_scanner(CliState *state,
                           FileRecord *report,
                           int *report_count);
 
-/* Prototypes from scanner.c (Araiz Imran) */
+/* Prototypes from scanner.c (Araiz) */
 int scan_directory(const char *dir_path, FileRecord *records, int *record_count);
 
-/* Prototypes from baseline.c (Moosa Baig) */
+/* Prototypes from baseline.c (Moosa) */
 int save_baseline(const char *baseline_path, const FileRecord *records, int count);
 int load_baseline(const char *baseline_path, FileRecord *records, int *count);
 int compare_with_baseline(const FileRecord *baseline,
