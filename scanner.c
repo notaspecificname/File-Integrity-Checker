@@ -36,3 +36,47 @@ int compute_file_hash(const char *filepath, char *output_hash){
     snprintf(output_hash,HASH_LEN,"%016llx",(unsigned long long)hash); //writing text into output_hash and formatting 64bit hash into hexadecimal with padding to match 16 characters long
     return 0;
 }
+
+
+int scan_directory(const char *dir_path,FileRecord *record,int *recordcount){
+    DIR *dir = opendir(dir_path);
+    if (dir==NULL){
+        return -1;
+    }
+
+    struct dirent *entry;
+    struct stat path_stat;
+    char full_path[MAX_PATH_LEN];
+
+    while((entry=readdir(dir)) != NULL){
+        if(*recordcount>= MAX_FILES){
+            break;
+        }
+        if(strcmp(entry->d_name, ".")==0 || strcmp(entry->d_name,"..")==0){
+            continue;
+        }
+        size_t len=strlen(dir_path);
+        if(len > 0 && (dir_path[len - 1] == '/' || dir_path[len - 1] == '\\')){
+            snprintf(full_path,sizeof(full_path),"%s%s",dir_path,entry->d_name);
+        }else{
+            snprintf(full_path,sizeof(full_path),"%s/%s",dir_path,entry->d_name);
+        }
+        if(stat(full_path,&path_stat)!=0){
+            continue;
+        }
+
+        if(S_ISDIR(path_stat.st_mode)){
+            scan_directory(full_path,record,recordcount);
+        }else if(S_ISREG(path_stat.st_mode)){
+            if(compute_file_hash(full_path,record[*recordcount].hash)==0){
+                snprintf(record[*recordcount].filepath,MAX_PATH_LEN,"%s",full_path);
+                record[*recordcount].status=STATUS_UNCHANGED;
+                gettime(record[*recordcount].timestamp,sizeof(record[*recordcount].timestamp));
+                (*recordcount)++;
+            }
+        }
+    }
+
+    closedir(dir);
+    return 0;
+}
