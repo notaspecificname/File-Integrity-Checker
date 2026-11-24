@@ -46,13 +46,14 @@ int main(void) {
 
     init_cli_state(&cli_state);
 
-    if (load_baseline(cli_state.baseline_file, baseline_records, &baseline_count) > 0) {
-        printf("Loaded %d baseline record(s) from '%s'.\n",
-               baseline_count, cli_state.baseline_file);
-    } else {
-        baseline_count = 0;
-        printf("No existing baseline found at '%s'. Create one via Option 2.\n",
-               cli_state.baseline_file);
+    if (load_baseline(cli_state.baseline_file, baseline_records, &baseline_count) == 0 && baseline_count > 0) {
+    printf("Loaded %d baseline record(s) from '%s'.\n",
+           baseline_count, cli_state.baseline_file);
+    } 
+    else {
+    baseline_count = 0;
+    printf("No existing baseline found at '%s'. Create one via Option 2.\n",
+           cli_state.baseline_file);
     }
 
     while (cli_state.is_running) {
