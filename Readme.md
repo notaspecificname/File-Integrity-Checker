@@ -28,8 +28,6 @@ Compile all source files together into an executable (for example, `fim`):
 gcc -Wall -Wextra -std=c11 main.c cli.c baseline.c scanner.c -o fim
 ```
 
-*(If your project links external libraries such as OpenSSL for hashing or uses a `Makefile`, adjust the build command accordingly.)*
-
 ### Running the Program
 
 Run the compiled binary from your terminal:
@@ -53,7 +51,3 @@ On Windows:
 ## Course Context
 
 Developed as a first-semester **Programming Fundamentals (PF)** lab project focusing on modular C programming, header/source separation, file/directory handling, and structured data types.
-
-## Notes
-
-- Because this README was generated from the repository file layout, you may want to update the **Usage / CLI Flags** and **Build Flags** sections with the exact commands, hashing algorithm, and baseline file format implemented in your code.
