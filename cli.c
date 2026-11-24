@@ -7,6 +7,15 @@
 #endif
 #include "fim_types.h"
 
+/* Forward prototypes for external functions called in cli.c */
+int scan_directory(const char *dir_path, FileRecord *records, int *record_count);
+int compare_with_baseline(const FileRecord *baseline,
+                          int base_count,
+                          FileRecord *current,
+                          int curr_count,
+                          FileRecord *report,
+                          int *report_count);
+
 void init_cli_state(CliState *state) {
     if (state == NULL) {
         return;
@@ -83,7 +92,7 @@ void run_periodic_scanner(CliState *state,
                           int base_count,
                           FileRecord *report,
                           int *report_count) {
-    FileRecord temp_scan[MAX_FILES];
+    static FileRecord temp_scan[MAX_FILES];
     int temp_count;
     int i;
     int changes_found;
